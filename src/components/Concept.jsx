@@ -13,19 +13,22 @@ const Concept = ({
   const { config, conceptSchemes } = getConfigAndConceptSchemes()
   const { data } = useSkoHubContext()
   const [language, setLanguage] = useState("")
+  const definition =
+    concept?.definition || concept?.description || concept?.dcdescription
+  const title = concept?.prefLabel || concept?.title || concept?.dctitle
 
   useEffect(() => {
     setLanguage(data.selectedLanguage)
   }, [data?.selectedLanguage])
 
   return (
-    <div className="content block main-block" id={getDomId(concept.id)}>
+    <div id={getDomId(concept.id)}>
       <h1 style={{ color: config.colors.skoHubAction }}>
         {concept.deprecated ? "Deprecated" : ""}
       </h1>
       <h1>
         {concept.notation && <span>{concept.notation.join(",")}&nbsp;</span>}
-        {i18n(language)(concept.prefLabel)}
+        {title && i18n(language)(title)}
       </h1>
       <ConceptURI id={concept.id} />
       <JsonLink to={getFilePath(concept.id, "json", customDomain)} />
@@ -43,31 +46,74 @@ const Concept = ({
           </ul>
         </div>
       )}
-      {concept.definition && (
+      {definition && (
         <div className="markdown">
           <h3>Definition</h3>
           <Markdown>
-            {i18n(language)(concept.definition) ||
+            {i18n(language)(definition) ||
               `*No definition in language "${language}" provided.*`}
           </Markdown>
         </div>
       )}
-      {concept.scopeNote && (
+      {concept.note && i18n(language)(concept.note) !== "" && (
         <div className="markdown">
-          <h3>Scope Note</h3>
-          <Markdown>
-            {i18n(language)(concept.scopeNote) ||
-              `*No scope note in language "${language}" provided.*`}
-          </Markdown>
+          <h3 id="note">Note</h3>
+          <ul aria-labelledby="note">
+            {i18n(language)(concept.note).map((note, i) => (
+              <li key={i}>
+                <Markdown>{note}</Markdown>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-      {concept.note && (
+      {concept.changeNote && i18n(language)(concept.changeNote) !== "" && (
         <div className="markdown">
-          <h3>Note</h3>
-          <Markdown>
-            {i18n(language)(concept.note) ||
-              `*No note in language "${language}" provided.*`}
-          </Markdown>
+          <h3 id="changenote">ChangeNote</h3>
+          <ul aria-labelledby="changenote">
+            {i18n(language)(concept.changeNote).map((changeNote, i) => (
+              <li key={i}>
+                <Markdown>{changeNote}</Markdown>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {concept.editorialNote &&
+        i18n(language)(concept.editorialNote) !== "" && (
+          <div className="markdown">
+            <h3 id="editorialnote">EditorialNote</h3>
+            <ul aria-labelledby="editorialnote">
+              {i18n(language)(concept.editorialNote).map((editorialNote, i) => (
+                <li key={i}>
+                  <Markdown>{editorialNote}</Markdown>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      {concept.historyNote && i18n(language)(concept.historyNote) !== "" && (
+        <div className="markdown">
+          <h3 id="historynote">HistoryNote</h3>
+          <ul aria-labelledby="historynote">
+            {i18n(language)(concept.historyNote).map((historyNote, i) => (
+              <li key={i}>
+                <Markdown>{historyNote}</Markdown>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {concept.scopeNote && i18n(language)(concept.scopeNote) !== "" && (
+        <div className="markdown">
+          <h3 id="scopenote">ScopeNote</h3>
+          <ul aria-labelledby="scopenote">
+            {i18n(language)(concept.scopeNote).map((scopeNote, i) => (
+              <li key={i}>
+                <Markdown>{scopeNote}</Markdown>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {concept.altLabel && i18n(language)(concept.altLabel) !== "" && (

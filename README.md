@@ -143,6 +143,7 @@ You can configure the following settings:
     - Logo
     - Colors
     - Fonts
+- Searchable Fields
 
 The settings are explained in the following sections.
 
@@ -173,6 +174,7 @@ The following customizations can be made:
 1. Changing the Logo
 1. Changing the Colors
 1. Changing the Fonts
+1. Changing the Footer Links
 
 #### Changing the Title
 
@@ -220,6 +222,18 @@ After that you have to adjust the config with the appropriate settings for `font
 
 You need to provide all settings for `regular` as well as `bold`.
 Otherwise SkoHub Vocabs will use the default fonts.
+
+#### Changing the Footer Links
+
+You can - and probably should - change the following links 
+
+- "Impressum" (Imprint)
+- "Datenschutz" (Privacy) 
+
+in the footer section of your Skohub website by adding a custom `footer` object to your `config.yaml`. See `config.default.yaml` for how the default links are defined. You can also add more links as desired.
+
+Currently, only the "Source" link cannot not be changed by configuration. 
+
 
 ## Adding additional properties to SkoHub Vocabs
 
@@ -274,6 +288,25 @@ url: [String]
 
 This will add the `url` field, being an array of strings.
 For other types, compare with already existing properties and just copy as you need.
+
+## Adding Searchable Fields
+
+To add a field to be searchable you have to make the following adjustments:
+
+- Add the field in the `config.yaml` file to `searchableAttributes`, e.g. `editorialNote`
+- In `src/queries.js` add it to `ConceptFields` (around line 176):
+```graphql
+editorialNote {
+  ${[...languages].join(" ")}
+}
+```
+- Add it to the labels to be indexed. Go to `gatsby-node.js` and add it the document object around line 341. For fields being *single* language tagged labels (e.g. `skos:prefLabel`) use `prefLabel` as an example. For fields being arrays of language tagged labels (e.g. `skos:altLabel`) use `altLabel` as an example. For `skos:editorialNote` it would be:
+```js
+...(concept.editorialNote &&
+Object.hasOwn(concept.editorialNote, language) && {
+  editorialNote: i18n(language)(concept.editorialNote),
+}),
+```
 
 ## Troubleshooting
 

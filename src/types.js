@@ -9,9 +9,16 @@ module.exports = (languages) => `
   type ConceptScheme implements Node {
     type: String,
     title: LanguageMap,
+    dc_title: LanguageMap,
+    prefLabel: LanguageMap,
     description: LanguageMap,
+    dc_description: LanguageMap,
     hasTopConcept: [Concept] @link(from: "hasTopConcept___NODE"),
-    languages: [String]
+    languages: [String],
+    issued: String,
+    preferredNamespaceUri: String,
+    preferredNamespacePrefix: String,
+    publisher: Concept
   }
 
   type Concept implements Node {
@@ -20,8 +27,11 @@ module.exports = (languages) => `
     altLabel: LanguageMapArray,
     hiddenLabel: LanguageMapArray,
     definition: LanguageMap,
-    scopeNote: LanguageMap,
-    note: LanguageMap,
+    note: LanguageMapArray,
+    changeNote: LanguageMapArray,
+    editorialNote: LanguageMapArray,
+    historyNote: LanguageMapArray,
+    scopeNote: LanguageMapArray,
     notation: [String],
     example: LanguageMap,
     topConceptOf: [ConceptScheme] @link(from: "topConceptOf___NODE"),

@@ -44,16 +44,31 @@ export const topConcept = {
     de: ["Verstecktes Label 1", "Verstecktes Label 2"],
   },
   definition: {
-    de: "Meine Definition",
+    de: "Meine Definition [Link](https://w3c.org)",
   },
   example: {
-    de: "Ein Beispiel",
-  },
-  scopeNote: {
-    de: "Meine Scope Note",
+    de: "Ein Beispiel [Link](https://w3c.org)",
   },
   note: {
-    de: "Meine Anmerkung",
+    de: ["Meine Anmerkung mit [Link](https://w3c.org)", "Noch eine Anmerkung"],
+  },
+  changeNote: {
+    de: ["Meine Change Note [Link](https://w3c.org)", "Noch eine Change Note"],
+  },
+  editorialNote: {
+    de: [
+      "Meine Editorial Note [Link](https://w3c.org)",
+      "Noch eine Editorial Note",
+    ],
+  },
+  historyNote: {
+    de: [
+      "Meine History Note [Link](https://w3c.org)",
+      "Noch eine History Note",
+    ],
+  },
+  scopeNote: {
+    de: ["Meine Scope Note [Link](https://w3c.org)", "Noch eine Scope Note"],
   },
   notation: ["1"],
   narrower: [concept2],
@@ -141,6 +156,15 @@ export const ConceptScheme = {
     de: "Test Vokabular",
     en: "Test Vocabulary",
   },
+  license: {
+    id: "http://creativecommons.org/publicdomain/zero/1.0/",
+  },
+  publisher: {
+    id: "https://oerworldmap.org/resource/urn:uuid:fd06253e-fe67-4910-b923-51db9d27e59f",
+  },
+  issued: "2019-12-11",
+  preferredNamespaceUri: "https://w3id.org/kim/hcrt/",
+  preferredNamespacePrefix: "hcrt",
   hasTopConcept: [topConcept],
 }
 

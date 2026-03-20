@@ -66,17 +66,17 @@ const Header = ({ siteTitle }) => {
       padding: 0;
       list-style: none;
       display: inline-block;
-      width: 80px;
       text-align: right;
 
       li {
-        margin: 0 0 0 5px;
         display: inline;
 
         button {
           background: none;
+          width: 2rem;
+          height: 2rem;
           display: inline-block;
-          padding: 5px;
+          margin: 2px;
           color: ${config.colors.skoHubMiddleGrey};
           border: 1px solid ${config.colors.skoHubMiddleGrey};
           border-radius: 30px;
@@ -91,7 +91,6 @@ const Header = ({ siteTitle }) => {
           color: black;
           font-weight: bold;
           display: inline-block;
-          padding: 5px;
           border: 1px solid ${config.colors.skoHubLightColor};
           border-radius: 30px;
         }
@@ -100,6 +99,7 @@ const Header = ({ siteTitle }) => {
   `
   const [languages, setLanguages] = useState([])
   const [language, setLanguage] = useState("")
+  const [title, setTitle] = useState("")
 
   // set page language
   useEffect(() => {
@@ -123,6 +123,16 @@ const Header = ({ siteTitle }) => {
     } else {
       setLanguages(conceptSchemesData[data.currentScheme.id].languages)
     }
+  }, [data])
+
+  // set title
+  useEffect(() => {
+    const title =
+      data.currentScheme?.title?.[data.selectedLanguage] ||
+      data.currentScheme?.prefLabel?.[data.selectedLanguage] ||
+      data.currentScheme?.dc_title?.[data.selectedLanguage] ||
+      data.currentScheme?.id
+    setTitle(title)
   }, [data])
 
   return (
@@ -158,8 +168,7 @@ const Header = ({ siteTitle }) => {
                     config.customDomain
                   )}
                 >
-                  {data.currentScheme?.title?.[data.selectedLanguage] ||
-                    data.currentScheme.id}
+                  {title}
                 </Link>
               </div>
             </div>

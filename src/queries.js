@@ -49,10 +49,19 @@ module.exports.allConcept = (inScheme, languages) => `
           definition {
             ${[...languages].join(" ")}
           }
-          scopeNote {
+          note {
             ${[...languages].join(" ")}
           }
-          note {
+          changeNote {
+            ${[...languages].join(" ")}
+          }
+          editorialNote {
+            ${[...languages].join(" ")}
+          }
+          historyNote {
+            ${[...languages].join(" ")}
+          }
+          scopeNote {
             ${[...languages].join(" ")}
           }
           notation
@@ -142,9 +151,27 @@ module.exports.allConceptScheme = (languages) => `
           title {
             ${[...languages].join(" ")}
           }
+          prefLabel {
+            ${[...languages].join(" ")}
+          }
+          dc_title {
+            ${[...languages].join(" ")}
+          }
           description {
             ${[...languages].join(" ")}
           }
+          dc_description {
+            ${[...languages].join(" ")}
+          }
+          publisher {
+            id
+          }
+          issued
+          license {
+            id
+          }
+          preferredNamespaceUri
+          preferredNamespacePrefix
           hasTopConcept {
             ...ConceptFields
             narrower {
@@ -157,6 +184,15 @@ module.exports.allConceptScheme = (languages) => `
                     ...ConceptFields
                     narrower {
                       ...ConceptFields
+                      narrower {
+                        ...ConceptFields
+                        narrower {
+                          ...ConceptFields
+                          narrower {
+                            ...ConceptFields
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -183,6 +219,9 @@ module.exports.allConceptScheme = (languages) => `
       ${[...languages].join(" ")}
     }
     example {
+      ${[...languages].join(" ")}
+    }
+    scopeNote {
       ${[...languages].join(" ")}
     }
     deprecated

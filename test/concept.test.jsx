@@ -63,7 +63,11 @@ describe.concurrent("Concept", () => {
     expect(
       screen.getByRole("heading", { name: "Definition" })
     ).toBeInTheDocument()
-    expect(screen.getByText("Meine Definition")).toBeInTheDocument()
+    const definition = screen.getByText("Meine Definition")
+    expect(definition).toBeInTheDocument()
+
+    const linkElement = within(definition).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
   })
 
   it("renders no definition if not provided in language", () => {
@@ -120,9 +124,102 @@ describe.concurrent("Concept", () => {
 
   it("renders examples", () => {
     render(<Concept pageContext={ConceptPC} />)
-    expect(
-      screen.getByRole("heading", { name: /^example$/i })
-    ).toBeInTheDocument()
+
+    const exampleHeading = screen.getByRole("heading", { name: /^example$/i })
+    expect(exampleHeading).toBeInTheDocument()
+
+    const example = screen.getByText(/Ein Beispiel/i)
+    expect(example).toBeInTheDocument()
+
+    const linkElement = within(example).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
+  })
+
+  it("renders notes", () => {
+    render(<Concept pageContext={ConceptPC} />)
+
+    const note = screen.getByText(/Meine Anmerkung/i)
+    expect(note).toBeInTheDocument()
+
+    const linkElement = within(note).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
+
+    const list = screen.getByRole("list", {
+      name: "Note",
+    })
+    const { getAllByRole } = within(list)
+    const items = getAllByRole("listitem")
+    expect(items.length).toBe(2)
+  })
+
+  it("renders changeNotes", () => {
+    render(<Concept pageContext={ConceptPC} />)
+
+    const changeNote = screen.getByText(/Meine Change Note/i)
+    expect(changeNote).toBeInTheDocument()
+
+    const linkElement = within(changeNote).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
+
+    const list = screen.getByRole("list", {
+      name: /changenote/i,
+    })
+    const { getAllByRole } = within(list)
+    const items = getAllByRole("listitem")
+    expect(items.length).toBe(2)
+  })
+
+  it("renders editorialNotes", () => {
+    render(<Concept pageContext={ConceptPC} />)
+
+    const editorialNote = screen.getByText(/Meine Editorial Note/i)
+    expect(editorialNote).toBeInTheDocument()
+
+    const linkElement = within(editorialNote).getByRole("link", {
+      name: /link/i,
+    })
+    expect(linkElement).toBeInTheDocument()
+
+    const list = screen.getByRole("list", {
+      name: /editorialnote/i,
+    })
+    const { getAllByRole } = within(list)
+    const items = getAllByRole("listitem")
+    expect(items.length).toBe(2)
+  })
+
+  it("renders historyNotes", () => {
+    render(<Concept pageContext={ConceptPC} />)
+
+    const historyNote = screen.getByText(/Meine History Note/i)
+    expect(historyNote).toBeInTheDocument()
+
+    const linkElement = within(historyNote).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
+
+    const list = screen.getByRole("list", {
+      name: /historynote/i,
+    })
+    const { getAllByRole } = within(list)
+    const items = getAllByRole("listitem")
+    expect(items.length).toBe(2)
+  })
+
+  it("renders scopeNotes", () => {
+    render(<Concept pageContext={ConceptPC} />)
+
+    const scopeNote = screen.getByText(/Meine Scope Note/i)
+    expect(scopeNote).toBeInTheDocument()
+
+    const linkElement = within(scopeNote).getByRole("link", { name: /link/i })
+    expect(linkElement).toBeInTheDocument()
+
+    const list = screen.getByRole("list", {
+      name: /scopenote/i,
+    })
+    const { getAllByRole } = within(list)
+    const items = getAllByRole("listitem")
+    expect(items.length).toBe(2)
   })
 
   it("renders related Concepts", () => {

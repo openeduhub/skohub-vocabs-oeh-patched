@@ -98,6 +98,7 @@ const parseLanguages = (graph) => {
  * @property {string} tokenizer
  * @property {Object} colors
  * @property {string} customDomain
+ * @property {string[]} searchableAttributes
  */
 
 /**
@@ -138,6 +139,7 @@ function loadConfig(configFile, defaultFile) {
     tokenizer: userConfig.tokenizer || defaults.tokenizer,
     colors: userConfig.ui.colors || defaults.ui.colors,
     fonts: userConfig.ui.fonts || defaults.ui.fonts,
+    footer: userConfig.ui.footer || defaults.ui.footer,
     searchableAttributes:
       userConfig.searchableAttributes || defaults.searchableAttributes,
     customDomain: userConfig.custom_domain || "",
@@ -214,6 +216,32 @@ const getLanguageFromUrl = (location) => {
   return language
 }
 
+/**
+ * Replaces an oldKey against a new key
+ * @param {Object} obj
+ * @param {string} oldKey
+ * @param {string} newKey
+ * @returns {Object}
+ */
+const replaceKeyInObject = (obj, oldKey, newKey) => {
+  if (!(oldKey in obj)) return obj
+  const newObject = {}
+  delete Object.assign(newObject, obj, { [newKey]: obj[oldKey] })[oldKey]
+  return newObject
+}
+
+/**
+ * Replaces multiple keys of an object.
+ * Expects an array of arrays in the form [oldKey, newKey]
+ */
+const replaceMultipleKeysInObject = (obj, keys) => {
+  const replaced = keys.reduce(
+    (acc, val) => replaceKeyInObject(acc, val[0], val[1]),
+    obj
+  )
+  return replaced
+}
+
 module.exports = {
   i18n,
   getFilePath,
@@ -224,4 +252,6 @@ module.exports = {
   parseLanguages,
   loadConfig,
   getLanguageFromUrl,
+  replaceKeyInObject,
+  replaceMultipleKeysInObject,
 }

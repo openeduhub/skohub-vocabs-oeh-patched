@@ -17,6 +17,7 @@ const {
   getFilePath,
   parseLanguages,
   loadConfig,
+  replaceMultipleKeysInObject,
 } = require("./src/common")
 const context = require("./src/context")
 const queries = require("./src/queries")
@@ -145,6 +146,12 @@ exports.onPreBootstrap = async ({ createContentDigest, actions, getNode }) => {
         hasTopConcept,
         member,
         deprecated,
+        "dc:title": dc_title,
+        "dc:description": dc_description,
+        "dct:issued": issued,
+        "dct:license": license,
+        // "vann:preferredNamespaceUri": preferredNamespaceUri,
+        // "vann:preferredNamespacePrefix": preferredNamespacePrefix,
         ...properties
       } = graph
       const type = Array.isArray(properties.type)
@@ -204,6 +211,10 @@ exports.onPreBootstrap = async ({ createContentDigest, actions, getNode }) => {
           type,
         },
         member___NODE: (member || []).map((member) => member.id),
+        dc_title,
+        dc_description,
+        issued,
+        license,
       }
       if (type === "Concept") {
         Object.assign(node, {})
@@ -289,14 +300,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
               document: {
                 id: "id",
                 // store: ["prefLabel", "altLabel"], /*  not working when importing, bug in flexsearch */
-                index: [
-                  "notation",
-                  "prefLabel",
-                  "altLabel",
-                  "hiddenLabel",
-                  "definition",
-                  "example",
-                ],
+                index: [...config.searchableAttributes],
               },
             })
             return [l, index]
@@ -306,7 +310,14 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
         const conceptsInScheme = await graphql(
           queries.allConcept(conceptScheme.id, languages)
         )
-        const embeddedConcepts = []
+        // embed concept scheme data
+        const embeddedConcepts = [
+          {
+            json: omitEmpty(Object.assign({}, conceptScheme, context.jsonld)),
+            jsonld: omitEmpty(Object.assign({}, conceptScheme, context.jsonld)),
+          },
+        ]
+
         conceptsInScheme.data.allConcept.edges.forEach(({ node: concept }) => {
           const json = omitEmpty(Object.assign({}, concept, context.jsonld))
           const jsonld = omitEmpty(Object.assign({}, concept, context.jsonld))
@@ -364,6 +375,10 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
                 Object.hasOwn(concept.example, language) && {
                   example: i18n(language)(concept.example),
                 }),
+              ...(concept.scopeNote &&
+                Object.hasOwn(concept.scopeNote, language) && {
+                  scopeNote: i18n(language)(concept.scopeNote),
+                }),
               notation: concept.notation,
             }
             indexes[language].add(document)
@@ -378,17 +393,29 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
             customDomain: config.customDomain,
           },
         })
+        const jsonldConceptScheme = replaceMultipleKeysInObject(conceptScheme, [
+          ["dc_title", "dc:title"],
+          ["dc_description", "dc:description"],
+        ])
 
         createData({
           path: getFilePath(conceptScheme.id, "json", config.customDomain),
           data: JSON.stringify(
-            omitEmpty(Object.assign({}, conceptScheme, context.jsonld), null, 2)
+            omitEmpty(
+              Object.assign({}, jsonldConceptScheme, context.jsonld),
+              null,
+              2
+            )
           ),
         })
         createData({
           path: getFilePath(conceptScheme.id, "jsonld", config.customDomain),
           data: JSON.stringify(
-            omitEmpty(Object.assign({}, conceptScheme, context.jsonld), null, 2)
+            omitEmpty(
+              Object.assign({}, jsonldConceptScheme, context.jsonld),
+              null,
+              2
+            )
           ),
         })
         // create index files
@@ -402,7 +429,10 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     conceptSchemes.data.allConceptScheme.edges.map(({ node: cs }) => ({
       id: cs.id,
       title: cs.title,
+      dc_title: cs.dc_title,
+      prefLabel: cs.prefLabel,
       description: cs.description,
+      dc_description: cs.dc_description,
       languages: Array.from(languagesByCS[cs.id]),
     }))
   )
