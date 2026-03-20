@@ -129,6 +129,7 @@ module.exports.allConcept = (inScheme, languages) => `
             }
           }
           deprecated
+          iconName
           isReplacedBy {
             id
           }
@@ -225,6 +226,7 @@ module.exports.allConceptScheme = (languages) => `
       ${[...languages].join(" ")}
     }
     deprecated
+    iconName
     url {
       id
     }

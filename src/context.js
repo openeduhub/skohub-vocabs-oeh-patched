@@ -7,6 +7,7 @@ const jsonld = {
     xsd: "http://www.w3.org/2001/XMLSchema#",
     dct: "http://purl.org/dc/terms/",
     dc: "http://purl.org/dc/elements/1.1/",
+    oeh: "http://w3id.org/openeduhub/vocab#",
     schema: "https://schema.org/",
     vann: "http://purl.org/vocab/vann/",
     ldp: "http://www.w3.org/ns/ldp#",
@@ -130,6 +131,7 @@ const jsonld = {
       "@id": "schema:url",
       "@container": "@set",
     },
+    iconName: "oeh:iconName",
   },
 }
 

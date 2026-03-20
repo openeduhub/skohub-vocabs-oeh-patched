@@ -48,6 +48,8 @@ module.exports = (languages) => `
     inScheme: [ConceptScheme] @link(from: "inScheme___NODE"),
     inSchemeAll: [ConceptScheme],
     hub: String,
+    iconName: String,
+    url: [Concept],
     deprecated: Boolean,
     isReplacedBy: [Concept]
   }
